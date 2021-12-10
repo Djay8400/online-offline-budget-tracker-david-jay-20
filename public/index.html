@@ -65,7 +65,7 @@
       }
     </script>
     <script>
-      const request = window.indexedDB.open("budget-tracker", 3);
+      const request = window.indexedDB.open("budget-tracker", 4);
 
       request.onupgradeneeded = ({ target }) => {
         const db = target.result;
