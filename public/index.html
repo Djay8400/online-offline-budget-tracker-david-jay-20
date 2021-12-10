@@ -64,5 +64,40 @@
         });
       }
     </script>
+    <script>
+      const request = window.indexedDB.open("budget-tracker", 3);
+
+      request.onupgradeneeded = ({ target }) => {
+        const db = target.result;
+        const objectStore = db.createObjectStore("transactions", {
+          keyPath: "listID",
+        });
+
+        objectStore.createIndex("dateIndex", "date");
+      };
+
+      request.onsuccess = () => {
+        const db = request.result;
+        const transaction = db.transaction(["transactions"], "readwrite");
+        const objectStore = transaction.objectStore("transactions");
+        const dateIndex = objectStore.index("dateIndex");
+
+        objectStore.add({ listID: "1", date: Date.now });
+        objectStore.add({ listID: "2", date: Date.now });
+        objectStore.add({ listID: "3", date: Date.now });
+        objectStore.add({ listID: "4", date: Date.now });
+
+        const getRequest = objectStore.get("1");
+        getRequest.onsuccess = () => {
+          console.log(getRequest.result);
+        };
+
+        // Return an item by index
+        const getRequestIdx = dateIndex.getAll("12-09-2021");
+        getRequestIdx.onsuccess = () => {
+          console.log(getRequestIdx.result);
+        };
+      };
+    </script>
   </body>
 </html>
