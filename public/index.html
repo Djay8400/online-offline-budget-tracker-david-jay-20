@@ -65,11 +65,11 @@
       }
     </script>
     <script>
-      const request = window.indexedDB.open("budget-tracker", 4);
+      const request = window.indexedDB.open("budget-tracker", 5);
 
       request.onupgradeneeded = ({ target }) => {
         const db = target.result;
-        const objectStore = db.createObjectStore("transactions", {
+        const objectStore = db.createObjectStore("transaction", {
           keyPath: "listID",
         });
 
@@ -78,8 +78,8 @@
 
       request.onsuccess = () => {
         const db = request.result;
-        const transaction = db.transaction(["transactions"], "readwrite");
-        const objectStore = transaction.objectStore("transactions");
+        const transaction = db.transaction(["transaction"], "readwrite");
+        const objectStore = transaction.objectStore("transaction");
         const dateIndex = objectStore.index("dateIndex");
 
         // objectStore.add({ listID: "1", date: "12/09/2021" });
