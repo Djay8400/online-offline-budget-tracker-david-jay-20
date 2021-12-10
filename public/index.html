@@ -82,10 +82,10 @@
         const objectStore = transaction.objectStore("transactions");
         const dateIndex = objectStore.index("dateIndex");
 
-        objectStore.add({ listID: "1", date: Date.now });
-        objectStore.add({ listID: "2", date: Date.now });
-        objectStore.add({ listID: "3", date: Date.now });
-        objectStore.add({ listID: "4", date: Date.now });
+        objectStore.add({ listID: "1", date: "12/09/2021" });
+        objectStore.add({ listID: "2", date: "12/09/2021" });
+        objectStore.add({ listID: "3", date: "12/09/2021" });
+        objectStore.add({ listID: "4", date: "12/09/2021" });
 
         const getRequest = objectStore.get("1");
         getRequest.onsuccess = () => {
@@ -93,7 +93,7 @@
         };
 
         // Return an item by index
-        const getRequestIdx = dateIndex.getAll("12-09-2021");
+        const getRequestIdx = dateIndex.getAll("12/09/2021");
         getRequestIdx.onsuccess = () => {
           console.log(getRequestIdx.result);
         };
