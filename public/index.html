@@ -82,6 +82,11 @@
         const objectStore = transaction.objectStore("transaction");
         const dateIndex = objectStore.index("dateIndex");
 
+        // objectStore.add({ listID: "1", date: "12/09/2021" });
+        // objectStore.add({ listID: "2", date: "12/09/2021" });
+        // objectStore.add({ listID: "3", date: "12/09/2021" });
+        // objectStore.add({ listID: "4", date: "12/09/2021" });
+
         const getRequest = objectStore.get("1");
         getRequest.onsuccess = () => {
           console.log(getRequest.result);
@@ -91,6 +96,18 @@
         const getRequestIdx = dateIndex.getAll("12/09/2021");
         getRequestIdx.onsuccess = () => {
           console.log(getRequestIdx.result);
+        };
+        const getCursorRequest = objectStore.openCursor();
+        getCursorRequest.onsuccess = (e) => {
+          const cursor = e.target.result;
+          if (cursor) {
+            if (cursor.value.status === "in-progress") {
+              const todo = cursor.value;
+              todo.status = "complete";
+              cursor.update(todo);
+            }
+            cursor.continue();
+          }
         };
       };
     </script>
