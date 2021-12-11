@@ -82,10 +82,10 @@
         const objectStore = transaction.objectStore("transaction");
         const dateIndex = objectStore.index("dateIndex");
 
-        // objectStore.add({ listID: "1", date: "12/09/2021" });
-        // objectStore.add({ listID: "2", date: "12/09/2021" });
-        // objectStore.add({ listID: "3", date: "12/09/2021" });
-        // objectStore.add({ listID: "4", date: "12/09/2021" });
+        objectStore.add({ listID: "1", date: "12/09/2021" });
+        objectStore.add({ listID: "2", date: "12/09/2021" });
+        objectStore.add({ listID: "3", date: "12/09/2021" });
+        objectStore.add({ listID: "4", date: "12/09/2021" });
 
         const getRequest = objectStore.get("1");
         getRequest.onsuccess = () => {
