@@ -1,51 +1,45 @@
-console.log("Hi from your service-worker.js file!");
-
-const CACHE_NAME = "static-cache-v2";
-const DATA_CACHE_NAME = "data-cache-v1";
-
 const FILES_TO_CACHE = [
   "/",
-  "/index.html",
   "/index.js",
+  "/offline.js",
   "/manifest.webmanifest",
-  "/style.css",
+  "/styles.css",
   "/icons/icon-192x192.png",
   "/icons/icon-512x512.png",
 ];
 
-// install
-self.addEventListener("install", function (evt) {
-  // pre cache image data
-  //   evt.waitUntil(
-  //     caches.open(DATA_CACHE_NAME).then((cache) => cache.add("/api/images"))
-  //   );
+const CACHE_NAME = "static-cache-v2";
+const DATA_CACHE_NAME = "data-cache-v1";
 
-  // pre cache all static assets
-  evt.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(FILES_TO_CACHE))
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches
+      .open(CACHE_NAME)
+      .then((cache) => cache.addAll(FILES_TO_CACHE))
+      .then(self.skipWaiting())
   );
-
-  // tell the browser to activate this service worker immediately once it
-  // has finished installing
-  self.skipWaiting();
 });
 
-// activate
-self.addEventListener("activate", function (evt) {
-  evt.waitUntil(
-    caches.keys().then((keyList) => {
-      return Promise.all(
-        keyList.map((key) => {
-          if (key !== CACHE_NAME && key !== DATA_CACHE_NAME) {
-            console.log("Removing old cache data", key);
-            return caches.delete(key);
-          }
-        })
-      );
-    })
+// The activate handler takes care of cleaning up old caches.
+self.addEventListener("activate", (event) => {
+  const currentCaches = [CACHE_NAME, DATA_CACHE_NAME];
+  event.waitUntil(
+    caches
+      .keys()
+      .then((cacheNames) => {
+        return cacheNames.filter(
+          (cacheName) => !currentCaches.includes(cacheName)
+        );
+      })
+      .then((cachesToDelete) => {
+        return Promise.all(
+          cachesToDelete.map((cacheToDelete) => {
+            return caches.delete(cacheToDelete);
+          })
+        );
+      })
+      .then(() => self.clients.claim())
   );
-
-  self.clients.claim();
 });
 
 // fetch
