@@ -1,11 +1,13 @@
 const FILES_TO_CACHE = [
   "/",
   "/index.js",
-  "/offline.js",
+  // "/offline.js",
   "/manifest.webmanifest",
-  "/styles.css",
+  "/style.css",
   "/icons/icon-192x192.png",
   "/icons/icon-512x512.png",
+  "https://cdn.jsdelivr.net/npm/chart.js@2.8.0",
+  "https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css",
 ];
 
 const CACHE_NAME = "static-cache-v2";
@@ -52,9 +54,9 @@ self.addEventListener("fetch", function (evt) {
           return fetch(evt.request)
             .then((response) => {
               // If the response was good, clone it and store it in the cache.
-              if (response.status === 200) {
-                cache.put(evt.request.url, response.clone());
-              }
+              // if (response.status === 200) {
+              cache.add(evt.request.url, response.clone());
+              // }
 
               return response;
             })
